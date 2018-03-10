@@ -1,9 +1,12 @@
 import numpy as np
+from numpy import reshape
 import matplotlib.pyplot as plt
 from pandas.plotting import lag_plot
 
 from loader import loadData
 from linearReg import regression
+
+from sklearn.linear_model import LinearRegression
 
 import time
 import pickle
@@ -21,6 +24,7 @@ if __name__ == "__main__":
     else:
         with open(data_pkl, 'rb') as fid:
             dataT = pickle.load(fid)
+    len_data = len(dataT[1])
     #print(data['2015-05']) #select all entries for may 2015
     #print(data.iloc[:,0]) #select the first column, besides index col timestamp
     #rolmean = data.iloc[:,0].rolling(center=False, window=10000).mean()
@@ -28,11 +32,31 @@ if __name__ == "__main__":
     #mean = plt.plot(rolmean['2018'], color='red', label='Rolling Mean')
 
 
-    preds = regression(dataT)
-    #plt.plot(dataT[1][len(dataT)-1000:len(dataT)-500], dataT[4][len(dataT)-1000:len(dataT)-500], 'b')
-    plt.plot(dataT[1][::200], dataT[4][::200], 'b')
-    #plt.plot(dataT[1][len(dataT[1])-499:], preds, 'r')
-    print(preds[::10])
+    lr = regression(dataT)
+    #plt.plot(dataT[1][100::200], dataT[4][100::200], 'b')
+    #plt.plot(dataT[4][::200], dataT[4][1::200], '.')
+
+    step = len(dataT[1])/500
+    #pred_x, pred_y = dataT[1][len_data-500:], dataT[4][len_data-500:]
+    pre_pred_x, pre_pred_y = dataT[1], dataT[4]
+    #preds = []
+    #print(len(pred_y))
+    #previous =  pred_y[0]
+    #correct = False
+    '''
+    for i in range(0,len(pre_pred_x)):
+        if i%10 == 0 and correct == True:
+            previous = lr.predict(pre_pred_y[i].astype(float))
+        else:
+            previous = lr.predict(previous.astype(float))
+        preds.append(previous)
+    '''
+    preds = lr.predict(pre_pred_x.astype(float).reshape(-1,1))
+    preds = np.asarray(preds)
+
+    plt.plot(pre_pred_x.astype(float).reshape(-1,1), pre_pred_y.astype(float).reshape(-1,1), 'b')
+    plt.plot(pre_pred_x.astype(float).reshape(-1,1), preds.astype(float).reshape(-1,1), 'r')
+    print(dataT[1][0], dataT[1][1])
     print("--- %s seconds ---" % (time.time() - start_time))
     plt.show()
     #print(data.transpose()[0])

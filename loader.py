@@ -28,4 +28,5 @@ def loadData(item, start, end):
 
     #print(str(data_array[0][2]))
     #print(str(data.shape))
+    
     return data_array
