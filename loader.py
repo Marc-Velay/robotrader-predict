@@ -26,6 +26,6 @@ def loadData(item, start, end):
         data_sub.append(item['low'])
         data_array.append(data_sub)
 
-    print(str(data_array[0][2]))
+    #print(str(data_array[0][2]))
     #print(str(data.shape))
     return data_array
