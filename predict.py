@@ -5,25 +5,39 @@ from pandas.plotting import lag_plot
 
 from loader import loadData
 from linearReg import regression
+from lstm import lstm
+
 from sklearn.linear_model import LinearRegression
 from svm import support_vectors_regression
 from validation import redoAlgo
 import time
 import pickle
 import os.path
+import h5py
 import sys
+from keras.models import load_model
+from pandas import DataFrame, Series, concat, datetime
+from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import MinMaxScaler
+from keras.models import Sequential
+from keras.layers import Dense, LSTM
+from math import sqrt
+
 
 data_pkl = 'data_gdax.pkl'
+lstm_pkl = 'lstm_model.h5'
 
-def loadAlgo(name):
+def loadAlgo(name,dataT):
     fullname = name + ".pkl"
+    if(name == "lstm"):
+        if os.path.isfile(lstm_pkl):
+            return load_model(lstm_pkl)            
     if not os.path.isfile(fullname):
-        redoAlgo(name)
-        return
+        return redoAlgo(name,dataT)
     else :
         with open(fullname, 'rb') as fid:
             lr = pickle.load(fid)
-            return lr
+        return lr
 
 if __name__ == "__main__":
     start_time = time.time()
@@ -43,38 +57,28 @@ if __name__ == "__main__":
 
     #mean = plt.plot(rolmean['2018'], color='red', label='Rolling Mean')
     if(len(sys.argv)<=1):
-        lr = loadAlgo("regression")
+        algo = loadAlgo("regression",dataT)
     elif(len(sys.argv)>2) :
-        lr = redoAlgo(sys.argv[1])
+        algo = redoAlgo(sys.argv[1],dataT)
     else :
-        lr = loadAlgo(sys.argv[1])
+        algo = loadAlgo(sys.argv[1],dataT)
 
-            
+    sys.exit("Should stop here.")
+
+    '''lr = regression(dataT)
     #plt.plot(dataT[1][100::200], dataT[4][100::200], 'b')
     #plt.plot(dataT[4][::200], dataT[4][1::200], '.')
 
     step = len(dataT[1])/500
     #pred_x, pred_y = dataT[1][len_data-500:], dataT[4][len_data-500:]
     pre_pred_x, pre_pred_y = dataT[1], dataT[4]
-    #preds = []
-    #print(len(pred_y))
-    #previous =  pred_y[0]
-    #correct = False
-    '''
-    for i in range(0,len(pre_pred_x)):
-        if i%10 == 0 and correct == True:
-            previous = lr.predict(pre_pred_y[i].astype(float))
-        else:
-            previous = lr.predict(previous.astype(float))
-        preds.append(previous)
-    '''
-    
     preds = lr.predict(pre_pred_x.astype(float).reshape(-1,1))
     preds = np.asarray(preds)
 
     plt.plot(pre_pred_x.astype(float).reshape(-1,1), pre_pred_y.astype(float).reshape(-1,1), 'b')
     plt.plot(pre_pred_x.astype(float).reshape(-1,1), preds.astype(float).reshape(-1,1), 'r')
     print(dataT[1][0], dataT[1][1])
+    '''
     print("--- %s seconds ---" % (time.time() - start_time))
     plt.show()
     #print(data.transpose()[0])
