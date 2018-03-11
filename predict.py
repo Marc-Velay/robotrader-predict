@@ -7,6 +7,7 @@ from loader import loadData
 from linearReg import regression
 from sklearn.linear_model import LinearRegression
 from svm import support_vectors_regression
+from validation import redoAlgo
 import time
 import pickle
 import os.path
@@ -23,18 +24,6 @@ def loadAlgo(name):
         with open(fullname, 'rb') as fid:
             lr = pickle.load(fid)
             return lr
-
-def redoAlgo(name):
-
-    if(len(sys.argv)<=1 or name=="regression") :
-        lr = regression(dataT)
-    elif (name=="svm"):
-        lr = support_vectors_regression(np.transpose(dataT))
-    else :
-        sys.exit("Unknown algorithm")
-    with open(name+".pkl", 'wb') as fid:
-            pickle.dump(lr, fid)
-    return lr
 
 if __name__ == "__main__":
     start_time = time.time()
@@ -61,7 +50,6 @@ if __name__ == "__main__":
         lr = loadAlgo(sys.argv[1])
 
             
-    sys.exit("Should stop here.")
     #plt.plot(dataT[1][100::200], dataT[4][100::200], 'b')
     #plt.plot(dataT[4][::200], dataT[4][1::200], '.')
 
@@ -80,6 +68,7 @@ if __name__ == "__main__":
             previous = lr.predict(previous.astype(float))
         preds.append(previous)
     '''
+    
     preds = lr.predict(pre_pred_x.astype(float).reshape(-1,1))
     preds = np.asarray(preds)
 
