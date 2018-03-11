@@ -1,53 +1,81 @@
-# pip install numpy, scipy, scikit-learn
 from sklearn.svm import SVR
-from sklearn.preprocessing import StandardScaler
 import numpy as np
-import csv
+import matplotlib.pyplot as plt
+import preprocessing as pp
+import sys
 
-values = []
-expected = []
-with open('GAS.CMDUSD_Candlestick_1_m_BID_20.11.2015-18.11.2017.csv', 'rb') as csvfile:
-     spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-     for row in spamreader:
-         aux = []
-         aux.append(float(row[1]))
-         aux.append(float(row[2]))
-         aux.append(float(row[3]))
-         aux.append(float(row[4]))
-         aux.append(float(row[5]))
-         values.append(aux)
-         
-#for data in result:
-#    mean = (row[3] + row[2])/2
+def getData(values) :
+    aux = []
+    for i in range(0,len(values)) :
+        #print (i)
+        #print (len(values[i]))
+        aux.append(values[i][3:])
+    values = aux
+    values,nbdata = pp.getLinear(values)
+    return values
 
-#train, expTrain = make_regression(n_features=4, random_state=0)
-scaler = StandardScaler()
-scaler.fit(values)
-values = scaler.transform(values)
+def trainSVM(svm,train,expTrain):
+    support = [[1,2,3,4]]
+    support = np.array(support)
+    for i in range(0,len(train)) :
+        svm = svm.fit(train[i], expTrain[i])
+        support = np.concatenate([support,svm.support_vectors_],axis=0)
+    np.delete(support,0,0)
+    return support
 
-for row in values:
-    aux = row[3]
-    expected.append(aux)
-del(expected[0])
-values = np.delete(values,len(values)-1,0)
-print len(values),len(expected),values[len(values)-1][3], expected[len(expected)-1]
-train = values[::1000000]
-expTrain = expected[::1000000]
+def evaluate(svm,check,expcheck) :
+    score = 0
+    print (len(check), len(expcheck))
+    for i in range(0, len(check)) :
+        score += svm.score(check[i], expcheck[i])
+    return score
 
-check = values[1000000::]
-expcheck = expected[1000000::]
-svr_rbf = SVR(kernel='rbf', C=1e3,gamma=0.1)
-svr_lin = SVR(kernel='linear', C=1e3)
-svr_poly = SVR(kernel='poly', C=1e3, degree=5)
-y_rbf = svr_rbf.fit(train, expTrain)
-y_lin = svr_lin.fit(train, expTrain)
-y_poly = svr_poly.fit(train, expTrain)
+def predict(svm, array) :
+    return svm.predict(array)
 
-print y_lin.score(check, expcheck)*100
-print y_poly.score(check, expcheck)*100
-print y_rbf.score(check, expcheck)*100
+def showData(svm,check,expcheck):
+    array = predict(svm,check[len(check)-1])
+    dates = list(range(1, len(array)+1))
+    print (len(array)+1, len(dates))
+    plt.plot(dates, array, color='cornflowerblue', lw=2, label='Polynomial model')
+    plt.plot(dates, expcheck[len(check)-1], color='darkorange', label='data')
 
-"""
-print(regr.coef_)
-print(regr.intercept_)
-print(regr.predict([[0, 0, 0, 0]]))"""
+if __name__ == "__main__":
+    svr_rbf = SVR(kernel='rbf', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
+    svr_sig = SVR(kernel='sigmoid', C=0.5,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
+    svr_poly = SVR(kernel='poly', C=1e3,epsilon=0.01 ,degree=5,cache_size=1000,verbose=True)
+    print (svr_sig)
+    values = getData()
+    train,expTrain,check,expcheck = pp.setSvmValues(values)
+    #svr_poly.support_vectors_ = trainSVM(svr_poly,train,expTrain)
+    #svr_rbf.support_vectors_ = trainSVM(svr_rbf,train,expTrain)
+    svr_sig.support_vectors_ = trainSVM(svr_sig,train,expTrain)
+    #print (evaluate(svr_sig,check,expcheck))
+    #print (evaluate(svr_poly,check,expcheck))
+    #print (evaluate(svr_rbf,check,expcheck))
+    #showData(svr_poly,check,expcheck)
+    showData(svr_sig,check,expcheck)
+    #showData(svr_rbf,check,expcheck)
+
+def support_vectors_regression(data,kernel="rbf") :
+    if (kernel == "rbf") :
+        svm = SVR(kernel='rbf', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
+    elif (kernel == "poly") :
+        svm = SVR(kernel='poly', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
+    elif (kernel == "sigmoid"):
+        svm = SVR(kernel='sigmoid', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
+    else:
+        sys.exit("Argument denied")
+    values = getData(data)
+    train,expTrain,check,expcheck = pp.setSvmValues(values)
+    svm.support_vectors_ = trainSVM(svm,train,expTrain)
+    return svm
+
+def getDefaultRBF() :
+    return SVR(kernel='rbf', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
+
+def getDefaultPoly():
+    return SVR(kernel='poly', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
+
+def getDefaultSigmoid():
+    return SVR(kernel='sigmoid', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
