@@ -12,8 +12,8 @@ from sklearn.metrics import mean_squared_error
 def regression(data):
     len_data = len(data[0])
 
-    train_x, test_x = data[1][0:len_data-500], data[4][len_data-500:]
-    train_y, test_y = data[4][0:len_data-500], data[4][len_data-500:]
+    train_x, test_x = data[1][0:len_data-501], data[4][len_data-501:]
+    train_y, test_y = data[4][0:len_data-499], data[4][len_data-499:]
 
 
     lr = LinearRegression()

@@ -10,6 +10,7 @@ from lstm import lstm
 from sklearn.linear_model import LinearRegression
 from svm import support_vectors_regression
 from validation import redoAlgo
+from validation import predict
 import time
 import pickle
 import os.path
@@ -63,6 +64,7 @@ if __name__ == "__main__":
     else :
         algo = loadAlgo(sys.argv[1],dataT)
 
+    print (predict(algo,dataT[0:100]))
     '''lr = regression(dataT)
     #plt.plot(dataT[1][100::200], dataT[4][100::200], 'b')
     #plt.plot(dataT[4][::200], dataT[4][1::200], '.')

@@ -5,8 +5,10 @@ from lstm import lstm
 import time
 import numpy as np
 import pickle
+from lstm_predictor import difference, timeseries_to_supervised, scale, fit_lstm, invert_scale, inverse_difference, forecast_lstm
 
 lstm_pkl = 'lstm_model.h5'
+TIMESTEPS = 500
 
 def redoAlgo(name,dataT):
     start_time = time.time()
@@ -23,13 +25,32 @@ def redoAlgo(name,dataT):
         lr.save(lstm_pkl)
     else :
         sys.exit("Unknown algorithm")
-    
     sendTTT(time.time()-start_time)
     return lr
 
 def predict(algo,dataset) :
-    #TODO:Should be called for the prediction of all algorithms because should be able to monitor it.
-    return
+    if("keras" in str(algo.__class__)):
+        return calculLSTM(algo,dataset)
+    elif ("svm" in str(algo.__class__)) :
+        return algo.predict(np.transpose(dataset[3:]))
+    else:
+        return algo.predict(np.array([dataset.astype(float)[4]]).reshape(-1, 1))
+
+
+def calculLSTM(lstm,data) :
+     # transform data to be stationary
+    print (data.shape)
+    raw_values = data[4].astype(float)
+    diff_values = difference(raw_values, 1)
+    # transform data to be supervised learning
+    supervised = timeseries_to_supervised(diff_values, 1)
+    supervised_values = supervised.values
+    # split data into train and test-sets
+    train, test = supervised_values[0:-TIMESTEPS], supervised_values[-TIMESTEPS:]
+    # transform the scale of the data
+    scaler, train_scaled, test_scaled = scale(train, test)
+    train_reshaped = train_scaled[:, 0].reshape(len(train_scaled), 1, 1)
+    return lstm.predict(train_reshaped, batch_size=1)
 
 def sendTTT(time) :
     print ("Time to train : ", time)
