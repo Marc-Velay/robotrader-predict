@@ -29,12 +29,15 @@ def redoAlgo(name,dataT):
     return lr
 
 def predict(algo,dataset) :
+    start_time = time.time()
     if("keras" in str(algo.__class__)):
-        return calculLSTM(algo,dataset)
+        var =  calculLSTM(algo,dataset)
     elif ("svm" in str(algo.__class__)) :
-        return algo.predict(np.transpose(dataset[3:]))
+        var =  algo.predict(np.transpose(dataset[3:]))
     else:
-        return algo.predict(np.array([dataset.astype(float)[4]]).reshape(-1, 1))
+        var =  algo.predict(np.array([dataset.astype(float)[4]]).reshape(-1, 1))
+    sendTTP(time.time()-start_time)
+    return var
 
 
 def calculLSTM(lstm,data) :
@@ -52,7 +55,11 @@ def calculLSTM(lstm,data) :
     train_reshaped = train_scaled[:, 0].reshape(len(train_scaled), 1, 1)
     return lstm.predict(train_reshaped, batch_size=1)
 
+def sendTTP(time):
+    print ("Time to predict", time)
+    #TODO: send Time to predict to DB
+
 def sendTTT(time) :
     print ("Time to train : ", time)
-    #TODO:Send time to train to BDD
-    return
+    #TODO:Send time to train to DB
+    
