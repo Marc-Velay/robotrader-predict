@@ -63,8 +63,6 @@ if __name__ == "__main__":
     else :
         algo = loadAlgo(sys.argv[1],dataT)
 
-    sys.exit("Should stop here.")
-
     '''lr = regression(dataT)
     #plt.plot(dataT[1][100::200], dataT[4][100::200], 'b')
     #plt.plot(dataT[4][::200], dataT[4][1::200], '.')

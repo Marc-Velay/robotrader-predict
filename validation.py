@@ -4,6 +4,7 @@ from linearReg import regression
 from lstm import lstm
 import time
 import numpy as np
+import pickle
 
 lstm_pkl = 'lstm_model.h5'
 
@@ -26,6 +27,11 @@ def redoAlgo(name,dataT):
     sendTTT(time.time()-start_time)
     return lr
 
-def sendTTT(time):
+def predict(algo,dataset) :
+    #TODO:Should be called for the prediction of all algorithms because should be able to monitor it.
+    return
+
+def sendTTT(time) :
+    print ("Time to train : ", time)
     #TODO:Send time to train to BDD
     return
