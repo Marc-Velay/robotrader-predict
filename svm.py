@@ -16,7 +16,7 @@ with open('GAS.CMDUSD_Candlestick_1_m_BID_20.11.2015-18.11.2017.csv', 'rb') as c
          aux.append(float(row[4]))
          aux.append(float(row[5]))
          values.append(aux)
-         
+
 #for data in result:
 #    mean = (row[3] + row[2])/2
 
