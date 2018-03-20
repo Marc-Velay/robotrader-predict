@@ -6,13 +6,13 @@ import json
 def loadData(item, start, end):
     #data = pd.read_csv('coinbaseEUR.csv', header=None, error_bad_lines=False)
     #data.index = pd.to_datetime((data.index.values*1e9).astype(int))
-    external = 1
+    external = 0
     external_adr = '86.64.78.32:30000'
-    internal_adr = '10.8.176.120:30000'
+    internal_adr = '10.8.176.101:30000'
     if external == 1:
-        r = requests.get('http://'+str(external_adr)+'/api/'+str(item)+'/'+str(start)+'/'+str(end), auth=('user', 'picklerick'))
+        r = requests.get('http://'+str(external_adr)+'/api/'+str(item)+'/'+str(start)+'/'+str(end))
     else:
-        r = requests.get('http://'+str(internal_adr)+'/api/'+str(item)+'/'+str(start)+'/'+str(end), auth=('user', 'picklerick'))
+        r = requests.get('http://'+str(internal_adr)+'/api/'+str(item)+'/'+str(start)+'/'+str(end))
     data = pd.array(r.json())
     data_array = []
     for item in data:
