@@ -32,6 +32,7 @@ def predict(algo,dataset) :
     start_time = time.time()
     if("keras" in str(algo.__class__)):
         var =  calculLSTM(algo,dataset)
+        var = np.reshape(var, len(var))
     elif ("svm" in str(algo.__class__)) :
         var =  algo.predict(np.transpose(dataset[3:]))
     else:
