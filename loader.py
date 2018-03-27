@@ -6,6 +6,10 @@ import json
 def loadDataTimestamp(item, start, end):
     #data = pd.read_csv('coinbaseEUR.csv', header=None, error_bad_lines=False)
     #data.index = pd.to_datetime((data.index.values*1e9).astype(int))
+<<<<<<< HEAD
+=======
+    external = 1
+>>>>>>> 5e6df2f81bf732534f1804ed708a12dea93e1b63
     external_adr = '86.64.78.32:30000'
     external = 0
     internal_adr = '10.8.176.101:30000'
@@ -28,6 +32,10 @@ def loadDataTimestamp(item, start, end):
 
     #print(str(data_array[0][2]))
     #print(str(data.shape))
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5e6df2f81bf732534f1804ed708a12dea93e1b63
     return data_array
 
 def loadAllData(item) :
