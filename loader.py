@@ -8,7 +8,6 @@ def loadDataTimestamp(item, start, end):
     #data.index = pd.to_datetime((data.index.values*1e9).astype(int))
     external = 1
     external_adr = '86.64.78.32:30000'
-    external = 0
     internal_adr = '10.8.176.101:30000'
     if external == 1:
         r = requests.get('http://'+str(external_adr)+'/api/'+str(item)+'/'+str(start)+'/'+str(end))
@@ -33,12 +32,12 @@ def loadDataTimestamp(item, start, end):
 
 def loadAllData(item) :
     external_adr = '86.64.78.32:30000'
-    external = 0
+    external = 1
     internal_adr = '10.8.176.101:30000'
     if external == 1:
-        r = requests.get('http://'+str(external_adr)+'/api/'+str(item)+'/all')
+        r = requests.get('http://'+str(external_adr)+'/api/'+str(item)+'/all/')
     else:
-        r = requests.get('http://'+str(internal_adr)+'/api/'+str(item)+'/all')
+        r = requests.get('http://'+str(internal_adr)+'/api/'+str(item)+'/all/')
     data = pd.array(r.json())
     data_array = []
     for item in data:

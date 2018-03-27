@@ -1,10 +1,15 @@
 import sys
-from svm import support_vectors_regression
+from svm import fit
 from linearReg import regression
-from lstm import lstm
+from lstm import fit as lstm
 import time
 import numpy as np
 import pickle
+
+import types
+import tempfile
+import keras.models
+
 from math import sqrt
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
@@ -26,9 +31,13 @@ def redoAlgo(name,dataT):
     elif (name == "lstm"):
         lr = lstm(dataT)
         lr.save(lstm_pkl)
+        #with open(name+".pkl", 'wb') as fid:
+        #    pickle.dump(lr, fid)
+        print ("Pickerick !")
     else :
         sys.exit("Unknown algorithm")
     sendTTT(time.time()-start_time)
+    print ("Algorithm trained")
     return lr
 
 def predict(algo,dataset) :
@@ -42,7 +51,6 @@ def predict(algo,dataset) :
         var =  algo.predict(np.array([dataset.astype(float)[4]]).reshape(-1, 1))
     sendTTP(time.time()-start_time)
     return var
-
 
 def calculLSTM(lstm_model,data) :
      # transform data to be stationary
