@@ -6,7 +6,7 @@ import json
 def loadData(item, start, end):
     #data = pd.read_csv('coinbaseEUR.csv', header=None, error_bad_lines=False)
     #data.index = pd.to_datetime((data.index.values*1e9).astype(int))
-    external = 0
+    external = 1
     external_adr = '86.64.78.32:30000'
     internal_adr = '10.8.176.101:30000'
     if external == 1:
@@ -28,5 +28,5 @@ def loadData(item, start, end):
 
     #print(str(data_array[0][2]))
     #print(str(data.shape))
-    
+
     return data_array

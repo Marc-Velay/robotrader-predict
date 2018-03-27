@@ -1,17 +1,18 @@
 from sklearn.svm import SVR
 import numpy as np
-import matplotlib.pyplot as plt
-import preprocessing as pp
+#import matplotlib.pyplot as plt
+import filtering as pp
 import sys
+
+
 
 def getData(values) :
     aux = []
     for i in range(0,len(values)) :
-        #print (i)
-        #print (len(values[i]))
         aux.append(values[i][3:])
     values = aux
     values,nbdata = pp.getLinear(values)
+    print(np.array(values).shape)
     return values
 
 def trainSVM(svm,train,expTrain):
@@ -40,6 +41,7 @@ def showData(svm,check,expcheck):
     plt.plot(dates, array, color='cornflowerblue', lw=2, label='Polynomial model')
     plt.plot(dates, expcheck[len(check)-1], color='darkorange', label='data')
 
+"""
 if __name__ == "__main__":
     svr_rbf = SVR(kernel='rbf', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
     svr_sig = SVR(kernel='sigmoid', C=0.5,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
@@ -56,6 +58,7 @@ if __name__ == "__main__":
     #showData(svr_poly,check,expcheck)
     showData(svr_sig,check,expcheck)
     #showData(svr_rbf,check,expcheck)
+"""
 
 def support_vectors_regression(data,kernel="rbf") :
     if (kernel == "rbf") :
@@ -67,7 +70,7 @@ def support_vectors_regression(data,kernel="rbf") :
     else:
         sys.exit("Argument denied")
     values = getData(data)
-    train,expTrain,check,expcheck = pp.setSvmValues(values)
+    train,expTrain = pp.setToTrain(values)
     svm.support_vectors_ = trainSVM(svm,train,expTrain)
     return svm
 

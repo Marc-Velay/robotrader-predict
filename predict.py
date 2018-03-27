@@ -8,9 +8,10 @@ from linearReg import regression
 from lstm import lstm
 
 from sklearn.linear_model import LinearRegression
+from filtering import scale
 from svm import support_vectors_regression
-from validation import redoAlgo
-from validation import predict
+from  displayDebug import display
+from validation import redoAlgo, predict
 import time
 import pickle
 import os.path
@@ -32,7 +33,7 @@ def loadAlgo(name,dataT):
     fullname = name + ".pkl"
     if(name == "lstm"):
         if os.path.isfile(lstm_pkl):
-            return load_model(lstm_pkl)            
+            return load_model(lstm_pkl)
     if not os.path.isfile(fullname):
         return redoAlgo(name,dataT)
     else :
@@ -43,13 +44,15 @@ def loadAlgo(name,dataT):
 if __name__ == "__main__":
     start_time = time.time()
     if not os.path.isfile(data_pkl):
-        data = loadData('GDAX', 1496275200, 1501545600)
+        data = loadData('gdax', 1422745200, 1519855140)
         dataT = np.transpose(data)
         with open(data_pkl, 'wb') as fid:
             pickle.dump(dataT, fid)
     else:
         with open(data_pkl, 'rb') as fid:
             dataT = pickle.load(fid)
+    print (dataT.shape)
+    #dataT = scale(dataT)
     len_data = len(dataT[1])
 
     #print(data['2015-05']) #select all entries for may 2015
@@ -64,7 +67,9 @@ if __name__ == "__main__":
     else :
         algo = loadAlgo(sys.argv[1],dataT)
 
-    print (predict(algo,dataT[0:100]))
+    predictions = predict(algo,dataT)[-1000:]
+    #print (predictions)
+    display(dataT[4][-1000:].astype(float),predictions)
     '''lr = regression(dataT)
     #plt.plot(dataT[1][100::200], dataT[4][100::200], 'b')
     #plt.plot(dataT[4][::200], dataT[4][1::200], '.')

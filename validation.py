@@ -35,6 +35,7 @@ def predict(algo,dataset) :
     start_time = time.time()
     if("keras" in str(algo.__class__)):
         var =  calculLSTM(algo,dataset)
+        var = np.reshape(var, len(var))
     elif ("svm" in str(algo.__class__)) :
         var =  algo.predict(np.transpose(dataset[3:]))
     else:
@@ -76,11 +77,11 @@ def calculLSTM(lstm_model,data) :
     # line plot of observed vs predicted
 
     indexes = np.arange(TIMESTEPS*2)
-    print(indexes)
-    plt.plot(indexes[:TIMESTEPS], raw_values[-TIMESTEPS*2:-TIMESTEPS])
+    plt.plot(raw_values[-TIMESTEPS*2:])
     print(raw_values[-TIMESTEPS*2:].shape)
     plt.plot(indexes[TIMESTEPS:], predictions)
     plt.show()
+    print(predictions)
     return predictions
 
 def sendTTP(time):
