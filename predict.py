@@ -41,8 +41,8 @@ def loadAlgo(name,dataT):
             lr = pickle.load(fid)
         return lr
 
-#def predict(algo):
-if __name__ == "__main__":
+def predict(algo):
+#if __name__ == "__main__":
     start_time = time.time()
     if not os.path.isfile(data_pkl):
         data = loadData('gdax', 1514764800, 1522151479)

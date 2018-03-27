@@ -60,7 +60,7 @@ if __name__ == "__main__":
     #showData(svr_rbf,check,expcheck)
 """
 
-def support_vectors_regression(data,kernel="rbf") :
+def fit(data,kernel="rbf") :
     if (kernel == "rbf") :
         svm = SVR(kernel='rbf', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
     elif (kernel == "poly") :

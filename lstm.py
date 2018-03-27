@@ -12,7 +12,7 @@ from lstm_predictor import difference, timeseries_to_supervised, scale, fit_lstm
 # load dataset
 #series = read_csv('shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 
-def lstm(data):
+def fit(data):
 
     TIMESTEPS = 500
 
