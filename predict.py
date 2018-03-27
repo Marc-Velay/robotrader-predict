@@ -3,7 +3,7 @@ from numpy import reshape
 import matplotlib.pyplot as plt
 from pandas.plotting import lag_plot
 
-from loader import loadData
+from loader import loadDataTimestamp
 from linearReg import regression
 from lstm import lstm
 
@@ -42,6 +42,7 @@ def loadAlgo(name,dataT):
             lr = pickle.load(fid)
         return lr
 
+#def predict(algo):
 if __name__ == "__main__":
     start_time = time.time()
     if not os.path.isfile(data_pkl):
