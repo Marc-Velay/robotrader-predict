@@ -31,10 +31,10 @@ def lstm(data):
     scaler, train_scaled, test_scaled = scale(train, test)
 
     # fit the model
-    lstm_model = fit_lstm(train_scaled, 1, 25, 4)
+    lstm_model = fit_lstm(train_scaled, 1, 2, 4)
     print('fitting finished')
     # forecast the entire training dataset to build up state for forecasting
-    train_reshaped = train_scaled[:, 0].reshape(len(train_scaled), 1, 1)
+    '''train_reshaped = train_scaled[:, 0].reshape(len(train_scaled), 1, 1)
     lstm_model.predict(train_reshaped, batch_size=1)
     print('prediction finished')
     # walk-forward validation on the test data
@@ -58,5 +58,5 @@ def lstm(data):
     # line plot of observed vs predicted
     plt.plot(raw_values[-TIMESTEPS:])
     plt.plot(predictions)
-    plt.show()
+    plt.show()'''
     return lstm_model

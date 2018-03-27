@@ -5,6 +5,9 @@ from lstm import lstm
 import time
 import numpy as np
 import pickle
+from math import sqrt
+import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error
 from lstm_predictor import difference, timeseries_to_supervised, scale, fit_lstm, invert_scale, inverse_difference, forecast_lstm
 
 lstm_pkl = 'lstm_model.h5'
@@ -40,7 +43,7 @@ def predict(algo,dataset) :
     return var
 
 
-def calculLSTM(lstm,data) :
+def calculLSTM(lstm_model,data) :
      # transform data to be stationary
     print (data.shape)
     raw_values = data[4].astype(float)
@@ -53,7 +56,32 @@ def calculLSTM(lstm,data) :
     # transform the scale of the data
     scaler, train_scaled, test_scaled = scale(train, test)
     train_reshaped = train_scaled[:, 0].reshape(len(train_scaled), 1, 1)
-    return lstm.predict(train_reshaped, batch_size=1)
+    predictions = list()
+    for i in range(len(test_scaled)):
+    	# make one-step forecast
+    	X, y = test_scaled[i, 0:-1], test_scaled[i, -1]
+    	yhat = forecast_lstm(lstm_model, 1, X)
+    	# invert scaling
+    	yhat = invert_scale(scaler, X, yhat)
+    	# invert differencing
+    	yhat = inverse_difference(raw_values, yhat, len(test_scaled)+1-i)
+    	# store forecast
+    	predictions.append(yhat)
+    	expected = raw_values[len(train) + i + 1]
+    	#print('Minute=%d, Predicted=%f, Expected=%f' % (i+1, yhat, expected))
+
+    # report performance
+    rmse = sqrt(mean_squared_error(raw_values[-TIMESTEPS:], predictions))
+    print('Test RMSE: %.3f' % rmse)
+    # line plot of observed vs predicted
+
+    indexes = np.arange(TIMESTEPS*2)
+    print(indexes)
+    plt.plot(indexes[:TIMESTEPS], raw_values[-TIMESTEPS*2:-TIMESTEPS])
+    print(raw_values[-TIMESTEPS*2:].shape)
+    plt.plot(indexes[TIMESTEPS:], predictions)
+    plt.show()
+    return predictions
 
 def sendTTP(time):
     print ("Time to predict", time)
@@ -62,4 +90,3 @@ def sendTTP(time):
 def sendTTT(time) :
     print ("Time to train : ", time)
     #TODO:Send time to train to DB
-    
