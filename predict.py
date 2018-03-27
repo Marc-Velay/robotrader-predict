@@ -44,7 +44,7 @@ def loadAlgo(name,dataT):
 if __name__ == "__main__":
     start_time = time.time()
     if not os.path.isfile(data_pkl):
-        data = loadData('gdax', 1422745200, 1519855140)
+        data = loadData('gdax', 1514764800, 1522151479)
         dataT = np.transpose(data)
         with open(data_pkl, 'wb') as fid:
             pickle.dump(dataT, fid)
@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     predictions = predict(algo,dataT)[-1000:]
     #print (predictions)
-    display(dataT[4][-1000:].astype(float),predictions)
+    #display(dataT[4][-500:].astype(float),predictions)
     '''lr = regression(dataT)
     #plt.plot(dataT[1][100::200], dataT[4][100::200], 'b')
     #plt.plot(dataT[4][::200], dataT[4][1::200], '.')
@@ -85,5 +85,5 @@ if __name__ == "__main__":
     print(dataT[1][0], dataT[1][1])
     '''
     print("--- %s seconds ---" % (time.time() - start_time))
-    plt.show()
+    #plt.show()
     #print(data.transpose()[0])

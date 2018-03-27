@@ -81,7 +81,6 @@ def calculLSTM(lstm_model,data) :
     print(raw_values[-TIMESTEPS*2:].shape)
     plt.plot(indexes[TIMESTEPS:], predictions)
     plt.show()
-    print(predictions)
     return predictions
 
 def sendTTP(time):
