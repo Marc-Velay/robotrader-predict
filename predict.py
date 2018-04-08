@@ -1,33 +1,35 @@
-import numpy as np
+#Will be removed, shouldn't be used anymore
+"""import numpy as np
 from numpy import reshape
 import matplotlib.pyplot as plt
 from pandas.plotting import lag_plot
 
 from loader import loadDataTimestamp
-from linearReg import regression
-from lstm import fit as lstm
+#from linearReg import regression
+from lstm import train as lstm
 
 from sklearn.linear_model import LinearRegression
 from filtering import scale
 #from svm import support_vectors_regression
 from  displayDebug import display
-from validation import redoAlgo, predict
+from validation import redoAlgo#, predict
 import time
 import pickle
 import os.path
 import h5py
 import sys
-from keras.models import load_model
+#from keras.models import load_model
 from pandas import DataFrame, Series, concat, datetime
-from sklearn.metrics import mean_squared_error
-from sklearn.preprocessing import MinMaxScaler
-from keras.models import Sequential
-from keras.layers import Dense, LSTM
+#from sklearn.metrics import mean_squared_error
+#from sklearn.preprocessing import MinMaxScaler
+#from keras.models import Sequential
+#from keras.layers import Dense, LSTM
 from math import sqrt
 
 
+
 data_pkl = 'data_gdax.pkl'
-lstm_pkl = 'lstm_model.h5'
+lstm_pkl = 'lstm.h5'
 
 def loadAlgo(name,dataT):
     fullname = name + ".pkl"
@@ -41,11 +43,17 @@ def loadAlgo(name,dataT):
             lr = pickle.load(fid)
         return lr
 
-#def predict(algo):
+def predicti(algo,dataT):
+    print (str(algo.__class__))
+    algo.predict(algo,dataT)[-1000:]
+    #predictions = predict(algo,dataT)[-1000:]
+    #print (predictions)
+    #display(dataT[4][-500:].astype(float),predictions)
+
 if __name__ == "__main__":
     start_time = time.time()
     if not os.path.isfile(data_pkl):
-        data = loadData('gdax', 1514764800, 1522151479)
+        data = loadDataTimestamp('gdax', 1514764800, 1522151479)
         dataT = np.transpose(data)
         with open(data_pkl, 'wb') as fid:
             pickle.dump(dataT, fid)
@@ -69,7 +77,7 @@ if __name__ == "__main__":
         algo = loadAlgo(sys.argv[1],dataT)
 
     print (algo)
-    predictions = algo.predict(algo,dataT)[-1000:]
+    predictions = predict(algo,dataT)[-1000:]
     #print (predictions)
     #display(dataT[4][-500:].astype(float),predictions)
     '''lr = regression(dataT)
@@ -89,3 +97,4 @@ if __name__ == "__main__":
     print("--- %s seconds ---" % (time.time() - start_time))
     #plt.show()
     #print(data.transpose()[0])
+"""

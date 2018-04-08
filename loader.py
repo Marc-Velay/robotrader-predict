@@ -6,7 +6,7 @@ import json
 def loadDataTimestamp(item, start, end):
     #data = pd.read_csv('coinbaseEUR.csv', header=None, error_bad_lines=False)
     #data.index = pd.to_datetime((data.index.values*1e9).astype(int))
-    external = 1
+    external = 0
     external_adr = '86.64.78.32:30000'
     internal_adr = '10.8.176.101:30000'
     if external == 1:
@@ -32,11 +32,13 @@ def loadDataTimestamp(item, start, end):
 
 def loadAllData(item) :
     external_adr = '86.64.78.32:30000'
-    external = 1
+    external = 0
     internal_adr = '10.8.176.101:30000'
     if external == 1:
+        print ("Requesting server for data by external adress")
         r = requests.get('http://'+str(external_adr)+'/api/'+str(item)+'/all/')
     else:
+        print ("Requesting server for data by internal adress")
         r = requests.get('http://'+str(internal_adr)+'/api/'+str(item)+'/all/')
     data = pd.array(r.json())
     data_array = []

@@ -9,7 +9,7 @@ from sklearn.utils import check_random_state
 from sklearn.metrics import mean_squared_error
 
 
-def regression(data):
+def fit(data):
     len_data = len(data[0])
 
     train_x, test_x = data[1][0:len_data-501], data[4][len_data-501:]

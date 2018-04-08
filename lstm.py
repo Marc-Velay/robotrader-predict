@@ -12,7 +12,9 @@ from lstm_predictor import difference, timeseries_to_supervised, scale, fit_lstm
 # load dataset
 #series = read_csv('shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 
-def fit(data):
+TIMESTEPS = 500
+
+def train(data):
 
     TIMESTEPS = 500
 
@@ -61,7 +63,7 @@ def fit(data):
     plt.show()'''
     return lstm_model
 
-def predict(lstm_model, data) :
+def predict(lstm_model,data) :
      # transform data to be stationary
     print (data.shape)
     raw_values = data[4].astype(float)
@@ -78,7 +80,7 @@ def predict(lstm_model, data) :
     for i in range(len(test_scaled)):
     	# make one-step forecast
     	X, y = test_scaled[i, 0:-1], test_scaled[i, -1]
-    	yhat = forecast_lstm(self, 1, X)
+    	yhat = forecast_lstm(lstm_model, 1, X)
     	# invert scaling
     	yhat = invert_scale(scaler, X, yhat)
     	# invert differencing
@@ -98,4 +100,4 @@ def predict(lstm_model, data) :
     print(raw_values[-TIMESTEPS*2:].shape)
     plt.plot(indexes[TIMESTEPS:], predictions)
     plt.show()
-    return np.reshape(predictions,len(predictions))
+    return predictions

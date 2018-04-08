@@ -43,6 +43,8 @@ def setToTrain(values) :
     for i in range(0,len(values)) :
         values[i] = np.delete(values[i],len(values[i])-1,0)
         values[i] = scaler.fit_transform(values[i],expected[i])
+    train = values[:int(len(values)-(len(values)*0.3))]
+    expTrain = expected[:int(len(expected)-(len(expected)*0.3))]
     return train,expTrain
 
 def scale (values) :

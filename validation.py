@@ -1,7 +1,7 @@
 import sys
 from svm import fit
-from linearReg import regression
-from lstm import fit as lstm
+from linearReg import fit as regression
+from lstm import train as lstm
 import time
 import numpy as np
 import pickle
@@ -41,6 +41,7 @@ def redoAlgo(name,dataT):
     return lr
 
 def predict(algo,dataset) :
+    print (str(algo.__class__))
     start_time = time.time()
     if("keras" in str(algo.__class__)):
         var =  calculLSTM(algo,dataset)

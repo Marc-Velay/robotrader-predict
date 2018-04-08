@@ -4,9 +4,10 @@ import numpy as np
 import filtering as pp
 import sys
 
-
+TIMESTEPS = 500
 
 def getData(values) :
+    print(np.array(values).shape)
     aux = []
     for i in range(0,len(values)) :
         aux.append(values[i][3:])
@@ -32,7 +33,13 @@ def evaluate(svm,check,expcheck) :
     return score
 
 def predict(svm, array) :
-    return svm.predict(array)
+    array = svm.predict(array)
+    indexes = np.arange(TIMESTEPS*2)
+    plt.plot(values[-TIMESTEPS*2:])
+    print(values[-TIMESTEPS*2:].shape)
+    plt.plot(indexes[TIMESTEPS:], array)
+    plt.show()
+    return array
 
 def showData(svm,check,expcheck):
     array = predict(svm,check[len(check)-1])
@@ -60,7 +67,7 @@ if __name__ == "__main__":
     #showData(svr_rbf,check,expcheck)
 """
 
-def fit(data,kernel="rbf") :
+def fit(data,kernel="poly") :
     if (kernel == "rbf") :
         svm = SVR(kernel='rbf', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
     elif (kernel == "poly") :
@@ -69,6 +76,7 @@ def fit(data,kernel="rbf") :
         svm = SVR(kernel='sigmoid', C=1e3,gamma=0.1,epsilon=0.01 ,degree=15,cache_size=1000,verbose=True)
     else:
         sys.exit("Argument denied")
+    data = np.transpose(data)
     values = getData(data)
     train,expTrain = pp.setToTrain(values)
     svm.support_vectors_ = trainSVM(svm,train,expTrain)
