@@ -1,4 +1,4 @@
-import sys
+"""import sys
 from svm import fit
 from linearReg import fit as regression
 from lstm import train as lstm
@@ -91,7 +91,7 @@ def calculLSTM(lstm_model,data) :
     plt.plot(indexes[TIMESTEPS:], predictions)
     plt.show()
     return predictions
-
+"""
 def sendTTP(time):
     print ("Time to predict", time)
     #TODO: send Time to predict to DB

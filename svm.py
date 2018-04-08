@@ -1,6 +1,6 @@
 from sklearn.svm import SVR
 import numpy as np
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import filtering as pp
 import sys
 
@@ -33,11 +33,12 @@ def evaluate(svm,check,expcheck) :
     return score
 
 def predict(svm, array) :
-    array = svm.predict(array)
+    array = np.transpose(array[3:])
+    pred = svm.predict(array)
     indexes = np.arange(TIMESTEPS*2)
-    plt.plot(values[-TIMESTEPS*2:])
-    print(values[-TIMESTEPS*2:].shape)
-    plt.plot(indexes[TIMESTEPS:], array)
+    plt.plot(array[-TIMESTEPS*2:])
+    print(array[-TIMESTEPS*2:].shape)
+    plt.plot(indexes[TIMESTEPS:], pred[:500])
     plt.show()
     return array
 

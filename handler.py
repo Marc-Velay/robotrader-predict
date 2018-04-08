@@ -13,7 +13,7 @@ def pickleHandler(algo) :
             print("Keras found, try opening with keras_models")
             algo = load_model(algo+".h5")
         else :
-            print("Pickle not found, try to dynamically import")
+            print("Pickle not found, will be necessary to train")
             algo = __import__(algo)
     else:
         with open(picklerick, 'rb') as fid:
@@ -56,7 +56,6 @@ if __name__ == "__main__":
     algo = pickleHandler(sys.argv[2])
     dataT = getdata(sys.argv[3])
     algoClass = __import__(sys.argv[2])
-    start_time = time.time()
     # Guess what to do 
     if(sys.argv[1] == "train") :
         print ("Training start")
